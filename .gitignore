@@ -29,3 +29,14 @@ Thumbs.db
 
 # Keep specific smaller videos if needed
 !src/components/resources/AIVIDEOHEALTHY.mp4 
+# Local Netlify folder
+.netlify
+*.zip
+dist.zip
+dist/assets/index-CgAX0WWy.css
+dist/assets/index-CHlTCx_9.js
+dist/assets/logo-DFcsPDCG.svg
+dist/images/Screenshot 2025-07-21 at 11.00.12 a.m..png
+dist/index.html
+dist/videos/data-analytics.png
+dist.zip

@@ -28,7 +28,7 @@ const About = () => {
       video: {
         title: "VR & AR Medical Diagnosis",
         description: "3D reconstruction of the patient's body being used to diagnose the patient",
-        src: "/videos/Presentación Enactus Nacional 2025.mp4",
+        src: "/videos/enactus-presentation.mp4",
         thumbnail: "https://via.placeholder.com/400x225/26bade/ffffff?text=VR+AR+Medical"
       }
     },
@@ -39,7 +39,7 @@ const About = () => {
       video: {
         title: "AI Medical Assistant Bot",
         description: "Intelligent medical assistant providing 24/7 support and guidance",
-        src: "/src/components/resources/healthy-bot-2.mov",
+        src: "/videos/healthy-bot-2.mp4",
         thumbnail: "https://via.placeholder.com/400x225/26bade/ffffff?text=AI+Medical+Bot"
       }
     },
@@ -50,8 +50,8 @@ const About = () => {
       video: {
         title: "Medical Data Analytics Platform",
         description: "Comprehensive data analysis and insights for healthcare optimization",
-        src: "/src/components/resources/Screenshot 2025-07-21 at 11.00.12 a.m..png",
-        thumbnail: "/src/components/resources/Screenshot 2025-07-21 at 11.00.12 a.m..png",
+        src: "/videos/data-analytics.png",
+        thumbnail: "/videos/data-analytics.png",
         isImage: true
       }
     },
@@ -62,7 +62,7 @@ const About = () => {
       video: {
         title: "AI-Powered Medical Insights",
         description: "Deep learning insights for predictive medicine and personalized care",
-        src: "/src/components/resources/AIVIDEOHEALTHY.mp4",
+        src: "/videos/ai-video-healthy.mp4",
         thumbnail: "https://via.placeholder.com/400x225/26bade/ffffff?text=AI+Insights"
       }
     }

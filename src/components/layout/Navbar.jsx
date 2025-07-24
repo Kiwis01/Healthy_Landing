@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import logoUrl from "@/components/resources/logo/logo.svg";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,8 +36,8 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <div className="flex items-center">
-            <a href="#hero" className="text-2xl font-bold text-healthy-primary">
-              Healthy
+            <a href="#hero">
+              <img src={logoUrl} alt="Healthy Logo" className="h-14 w-auto" />
             </a>
           </div>
 
