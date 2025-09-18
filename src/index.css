@@ -74,6 +74,15 @@
   }
 }
 
+@layer base {
+  .fx-grid {
+    transition: opacity 300ms ease;
+  }
+  html[data-no-grid='1'] .fx-grid {
+    opacity: 0 !important;
+  }
+}
+
 @layer components {
   .heading-xl {
     @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
@@ -160,4 +169,4 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #1e9bb8;
-} 
+}
