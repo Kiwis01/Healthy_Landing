@@ -2,10 +2,14 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, Center } from "@react-three/drei";
+import { useGLTF, Center, PerspectiveCamera } from "@react-three/drei";
 
 const TaglineSequence = () => {
   const sectionRef = useRef(null);
+  const canvasWrapRef = useRef(null);
+  const camRef = useRef(null);
+  const brainRef = useRef(null);
+  const overlayRef = useRef(null);
   const t1Ref = useRef(null);
   const t2Ref = useRef(null);
   const t3Ref = useRef(null);
@@ -21,7 +25,7 @@ const TaglineSequence = () => {
         const apply = (mat) => {
           if (!mat) return;
           mat.transparent = true;
-          mat.opacity = 0.6; // 60% opacity (15% less transparent)
+          mat.opacity = 0.65; // 65% opacity (additional 5% less transparent)
           // optional: reduce depthWrite to avoid harsh self-overdraw with transparency
           if ('depthWrite' in mat) mat.depthWrite = false;
         };
@@ -40,12 +44,13 @@ const TaglineSequence = () => {
       });
     }, [scene]);
     useFrame((state, delta) => {
-      if (!group.current) return;
+      const target = (props.outerRef && props.outerRef.current) ? props.outerRef.current : group.current;
+      if (!target) return;
       // subtle rotation for life
-      group.current.rotation.y += delta * 0.25;
+      target.rotation.y += delta * 0.45;
     });
     return (
-      <group ref={group} {...props}>
+      <group ref={props.outerRef || group} {...props}>
         <Center>
           {/* 3x larger than previous 1.4 => 4.2, plus 10% => 4.62 */}
           <primitive object={scene} scale={4.62} />
@@ -62,17 +67,19 @@ const TaglineSequence = () => {
 
     const ctx = gsap.context(() => {
       const items = [t1Ref.current, t2Ref.current, t3Ref.current];
-      gsap.set(items, { autoAlpha: 0, y: 10 });
+      // Initialize hidden and non-interactive
+      items.forEach((el) => el && gsap.set(el, { autoAlpha: 0, y: 6, display: 'none', pointerEvents: 'none' }));
 
       let lastIndex = -1;
       const applyIndex = (i) => {
         items.forEach((el, j) => {
-          gsap.to(el, {
-            autoAlpha: j === i ? 1 : 0,
-            y: j === i ? 0 : -10,
-            duration: 0.25,
-            ease: "power1.out",
-          });
+          if (!el) return;
+          if (j === i) {
+            gsap.set(el, { display: 'inline-block', pointerEvents: 'auto' });
+            gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.inOut' });
+          } else {
+            gsap.to(el, { autoAlpha: 0, y: -6, duration: 0.6, ease: 'power2.inOut', onComplete: () => gsap.set(el, { display: 'none', pointerEvents: 'none' }) });
+          }
         });
         lastIndex = i;
       };
@@ -83,14 +90,64 @@ const TaglineSequence = () => {
         end: "+=300%",
         scrub: true,
         pin: true,
-        snap: {
-          snapTo: (value) => Math.round(value * 3) / 3, // 0, 1/3, 2/3, 1
-          duration: 0.4,
-          ease: "power1.inOut",
-        },
+        snap: false,
         onUpdate: (self) => {
           const i = Math.min(2, Math.max(0, Math.round(self.progress * 3)));
           if (i !== lastIndex) applyIndex(i);
+        },
+        onLeave: () => {
+          // Keep overlay visible to mask the jump to next section
+          if (overlayRef.current) overlayRef.current.style.opacity = '1';
+          const next = document.getElementById('mri-showcase') || sectionRef.current?.nextElementSibling;
+          if (next) {
+            const top = next.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({ top, behavior: 'auto' });
+          }
+          // Fade overlay out to reveal the next (now in place)
+          if (overlayRef.current) gsap.to(overlayRef.current, { opacity: 0, duration: 0.6, ease: 'power1.out', delay: 0.05 });
+        },
+      });
+
+      // Zoom/fade driven directly by scroll during the last third (built for every device)
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: "+=300%",
+        scrub: true,
+        onUpdate: (self) => {
+          const p = self.progress;
+          // normalize last third progress: 0 at 2/3, 1 at end
+          const seg = Math.min(1, Math.max(0, (p - 2 / 3) / (1 / 3)));
+          const cam = camRef.current;
+          const wrap = canvasWrapRef.current;
+          const brain = brainRef.current;
+          if (cam) {
+            // interpolate camera Z to dive into the brain and widen FOV for impact
+            cam.position.z = gsap.utils.interpolate(2.6, 0.02, seg);
+            cam.fov = gsap.utils.interpolate(45, 90, seg);
+            if (typeof cam.updateProjectionMatrix === 'function') cam.updateProjectionMatrix();
+          }
+          if (brain) {
+            // scale up brain to enhance the "entering" sensation
+            brain.scale.setScalar(gsap.utils.interpolate(1, 18, seg));
+          }
+          if (wrap) {
+            // fade only in the last 30% of the final segment for a visible zoom first
+            const fadeSeg = Math.min(1, Math.max(0, (seg - 0.7) / 0.3));
+            const o = 1 - fadeSeg;
+            wrap.style.opacity = o.toFixed(3);
+          }
+          // Also fade out taglines to avoid overlap during crossfade
+          const fadeSeg = Math.min(1, Math.max(0, (seg - 0.7) / 0.3));
+          const alpha = (1 - fadeSeg).toFixed(3);
+          if (t1Ref.current) t1Ref.current.style.opacity = alpha;
+          if (t2Ref.current) t2Ref.current.style.opacity = alpha;
+          if (t3Ref.current) t3Ref.current.style.opacity = alpha;
+          if (overlayRef.current) {
+            // Overlay fades in while wrap fades out to hide any movement
+            const fadeSeg = Math.min(1, Math.max(0, (seg - 0.7) / 0.3));
+            overlayRef.current.style.opacity = fadeSeg.toFixed(3);
+          }
         },
       });
 
@@ -117,15 +174,18 @@ const TaglineSequence = () => {
       <div className="sticky top-0 min-h-screen flex items-center justify-center">
         {/* 3D brain background (behind text) */}
         {!reduceMotion && (
-          <div className="absolute inset-0 z-0 pointer-events-none">
-            <Canvas camera={{ position: [0, 0, 2.6], fov: 45 }} dpr={[1, 1.7]} gl={{ antialias: true }}>
+          <div ref={canvasWrapRef} className="absolute inset-0 z-0 pointer-events-none">
+            <Canvas dpr={[1, 1.7]} gl={{ antialias: true }}>
+              <PerspectiveCamera makeDefault ref={camRef} position={[0, 0, 2.6]} fov={45} near={0.001} far={50} />
               <ambientLight intensity={0.5} />
               <directionalLight position={[2, 2, 2]} intensity={0.6} />
               <directionalLight position={[-2, -1, -2]} intensity={0.18} />
-              <BrainModel />
+              <BrainModel outerRef={brainRef} />
             </Canvas>
           </div>
         )}
+        {/* Plain white overlay to mask the jump to the next slide */}
+        <div ref={overlayRef} className="fixed inset-0 z-[60] pointer-events-none opacity-0 bg-white" />
         <div className="relative z-10 w-full h-[28vh] md:h-[34vh] text-center px-6">
           <h2
             ref={t1Ref}

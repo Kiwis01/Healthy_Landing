@@ -3,7 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Brain, Cloud, Shield } from "lucide-react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, Center } from "@react-three/drei";
 
 const panels = [
   {
@@ -28,9 +28,9 @@ const panels = [
     bg: "from-healthy-light to-white",
   },
   {
-    id: "panel-sarcoidosis",
-    title: "Clinical Case: Sarcoidosis",
-    desc: "Visualización de lesiones granulomatosas con reconstrucción 3D para apoyo al diagnóstico.",
+    id: "panel-lung",
+    title: "Clinical Case: Lung Cancer",
+    desc: "Reconstrucción 3D con realce tumoral para soporte al diagnóstico.",
     Icon: Shield,
     bg: "from-white to-healthy-light",
   },
@@ -46,12 +46,14 @@ const ApplePanels = () => {
     const { scene } = useGLTF('/models/lung_cancer_pancost_tumor/scene.gltf');
     useFrame((_, delta) => {
       if (!group.current) return;
+      // Rotate around its own Y axis (no tilt) for a clean spin
       group.current.rotation.y += delta * 0.10;
-      group.current.rotation.x = Math.sin(performance.now() * 0.0002) * 0.1;
     });
     return (
       <group ref={group} {...props}>
-        <primitive object={scene} position={[0, -0.6, 0]} scale={1.4} />
+        <Center>
+          <primitive object={scene} position={[props.xOffset ?? 0, props.yOffset ?? -0.6, 0]} scale={props.modelScale ?? 1.4} />
+        </Center>
       </group>
     );
   }
@@ -65,7 +67,7 @@ const ApplePanels = () => {
     });
     return (
       <group ref={group} {...props}>
-        <primitive object={scene} position={[0, -0.4, 0]} scale={1.2} />
+        <primitive object={scene} position={[0, props.yOffset ?? -0.4, 0]} scale={props.modelScale ?? 1.2} />
       </group>
     );
   }
@@ -137,37 +139,48 @@ const ApplePanels = () => {
         <div
           key={id}
           ref={(el) => (refs.current[idx] = el)}
-          className={`relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b ${bg}`}
+          className={`relative min-h-screen flex items-center justify-center ${id === 'panel-lung' ? 'overflow-visible' : 'overflow-hidden'} bg-gradient-to-b ${bg}`}
         >
-          <div className="absolute inset-0 opacity-[0.06] bg-hero-pattern" />
+          {id !== 'panel-lung' && (
+            <div className="absolute inset-0 opacity-[0.06] bg-hero-pattern" />
+          )}
+          {/* Absolute right-side Canvas for panel-lung to avoid clipping by any box */}
+          {id === 'panel-lung' && !reduceMotion && visible[idx] && (
+            <div className="absolute top-1/2 -translate-y-1/2 right-0 w-[40vw] max-w-[560px] min-w-[220px] h-[48vh] max-h-[560px] min-h-[220px] pointer-events-none z-0">
+              <Canvas camera={{ position: [0, 0, 6.0], fov: 45 }} dpr={[1, 1.7]} gl={{ antialias: true, alpha: true }}>
+                {/* Bright lighting to ensure visibility (increased by ~30%) */}
+                <ambientLight intensity={5.86} />
+                <directionalLight position={[2.6, 2.6, 2.6]} intensity={3.64} />
+                <directionalLight position={[-2.6, -1.4, -2.6]} intensity={1.56} />
+                <hemisphereLight args={["#ffffff", "#dff2ff", 1.56]} />
+                {/* ~70% smaller from recent size and lower ~50% */}
+                <LungModel modelScale={0.0060} xOffset={0.0} yOffset={-1.95} />
+              </Canvas>
+            </div>
+          )}
           <div className="container mx-auto px-4 md:px-6">
             <div className="grid md:grid-cols-2 items-center gap-10">
-              <div className="text-center md:text-left">
+              <div className={`text-center md:text-left relative z-10 ${id === 'panel-lung' ? 'text-gray-900' : ''}`}>
                 <h2 className="ap-title heading-lg mb-4">{title}</h2>
-                <p className="ap-desc text-lg text-gray-600 max-w-xl mx-auto md:mx-0">
-                  {desc}
-                </p>
+                <p className={`ap-desc text-lg ${id === 'panel-lung' ? 'text-gray-700' : 'text-gray-600'} max-w-xl mx-auto md:mx-0`}>{desc}</p>
               </div>
-              <div className="flex items-center justify-center">
-                <div className="ap-icon relative w-[280px] h-[280px] md:w-[360px] md:h-[360px] rounded-2xl bg-white shadow-xl border border-gray-200 flex items-center justify-center overflow-hidden">
-                  {id === 'panel-ai' && !reduceMotion && visible[idx] ? (
-                    <Canvas camera={{ position: [0, 0, 3.2], fov: 45 }} dpr={[1, 1.7]} gl={{ antialias: true }}>
-                      <ambientLight intensity={0.6} />
-                      <directionalLight position={[2, 2, 2]} intensity={0.7} />
-                      <directionalLight position={[-2, -1, -2]} intensity={0.25} />
-                      <LungModel />
-                    </Canvas>
-                  ) : id === 'panel-sarcoidosis' && !reduceMotion && visible[idx] ? (
-                    <Canvas camera={{ position: [0, 0, 3.2], fov: 45 }} dpr={[1, 1.7]} gl={{ antialias: true }}>
-                      <ambientLight intensity={0.6} />
-                      <directionalLight position={[2, 2, 2]} intensity={0.7} />
-                      <directionalLight position={[-2, -1, -2]} intensity={0.25} />
-                      <SarcoidosisModel />
-                    </Canvas>
-                  ) : (
-                    <Icon className="h-24 w-24 text-healthy-primary" />
-                  )}
-                </div>
+              <div className={`flex ${id === 'panel-lung' ? 'items-end justify-end' : 'items-center justify-center'}`}>
+                {id !== 'panel-lung' ? (
+                  <div className="ap-icon relative w-[280px] h-[280px] md:w-[360px] md:h-[360px] rounded-2xl bg-white shadow-xl border border-gray-200 flex items-center justify-center overflow-hidden">
+                    {id === 'panel-ai' && !reduceMotion && visible[idx] ? (
+                      <Canvas camera={{ position: [0, 0, 3.2], fov: 45 }} dpr={[1, 1.7]} gl={{ antialias: true }}>
+                        <ambientLight intensity={0.6} />
+                        <directionalLight position={[2, 2, 2]} intensity={0.7} />
+                        <directionalLight position={[-2, -1, -2]} intensity={0.25} />
+                        <LungModel />
+                      </Canvas>
+                    ) : (
+                      <Icon className="h-24 w-24 text-healthy-primary" />
+                    )}
+                  </div>
+                ) : (
+                  <div className="w-full h-[1px]" />
+                )}
               </div>
             </div>
           </div>
