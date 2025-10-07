@@ -18,9 +18,9 @@ const Navbar = () => {
 
   const navItems = [
     { href: "#hero", label: "Home" },
-    { href: "#features", label: "Features" },
-    { href: "#about", label: "About" },
-    { href: "#services", label: "Services" },
+    { href: "#problem", label: "Problem" },
+    { href: "#features", label: "Platform" },
+    { href: "#vision", label: "Vision" },
     { href: "#contact", label: "Contact" },
   ];
 
@@ -56,9 +56,11 @@ const Navbar = () => {
 
           {/* CTA Button */}
           <div className="hidden md:block">
-            <Button className="bg-healthy-primary hover:bg-healthy-secondary text-white">
-              Get Started
-            </Button>
+            <a href="#contact">
+              <Button className="bg-healthy-primary hover:bg-healthy-secondary text-white">
+                Request a Demo
+              </Button>
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -89,9 +91,11 @@ const Navbar = () => {
                 </a>
               ))}
               <div className="pt-4">
-                <Button className="w-full bg-healthy-primary hover:bg-healthy-secondary text-white">
-                  Get Started
-                </Button>
+                <a href="#contact" className="block">
+                  <Button className="w-full bg-healthy-primary hover:bg-healthy-secondary text-white">
+                    Request a Demo
+                  </Button>
+                </a>
               </div>
             </div>
           </div>

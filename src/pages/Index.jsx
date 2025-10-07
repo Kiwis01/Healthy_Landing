@@ -8,12 +8,11 @@ import BackgroundFX from "@/components/layout/BackgroundFX";
 import BackgroundOrgans from "@/components/layout/BackgroundOrgans";
 import Hero from "@/components/sections/Hero";
 import TaglineSequence from "@/components/sections/TaglineSequence";
-import ApplePanels from "@/components/sections/ApplePanels";
 import IntroPanel from "@/components/sections/IntroPanel";
 import MRIShowcase from "@/components/sections/MRIShowcase";
 import Features from "@/components/sections/Features";
-import About from "@/components/sections/About";
-import Services from "@/components/sections/Services";
+import Problem from "@/components/sections/Problem";
+import Vision from "@/components/sections/Vision";
 import Contact from "@/components/sections/Contact";
 
 const Index = () => {
@@ -117,11 +116,10 @@ const Index = () => {
         <Hero />
         <TaglineSequence />
         <MRIShowcase />
-        <ApplePanels />
-        <IntroPanel />
+        <Problem />
         <Features />
-        <About />
-        <Services />
+        <Vision />
+        <IntroPanel />
         <Contact />
       </main>
       

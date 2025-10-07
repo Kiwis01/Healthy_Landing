@@ -72,13 +72,20 @@ const TaglineSequence = () => {
 
       let lastIndex = -1;
       const applyIndex = (i) => {
+        // Stop any ongoing tweens to avoid overlap/flicker
+        gsap.killTweensOf(items);
         items.forEach((el, j) => {
           if (!el) return;
           if (j === i) {
             gsap.set(el, { display: 'inline-block', pointerEvents: 'auto' });
-            gsap.to(el, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.inOut' });
+            gsap.fromTo(
+              el,
+              { autoAlpha: 0, y: 6 },
+              { autoAlpha: 1, y: 0, duration: 0.45, ease: 'power2.out', overwrite: 'auto' }
+            );
           } else {
-            gsap.to(el, { autoAlpha: 0, y: -6, duration: 0.6, ease: 'power2.inOut', onComplete: () => gsap.set(el, { display: 'none', pointerEvents: 'none' }) });
+            // Hide others immediately to prevent stacking
+            gsap.set(el, { autoAlpha: 0, y: -6, display: 'none', pointerEvents: 'none' });
           }
         });
         lastIndex = i;
@@ -87,24 +94,17 @@ const TaglineSequence = () => {
       const st = ScrollTrigger.create({
         trigger: section,
         start: "top top",
-        end: "+=300%",
+        end: "+=240%",
         scrub: true,
         pin: true,
-        snap: false,
-        onUpdate: (self) => {
-          const i = Math.min(2, Math.max(0, Math.round(self.progress * 3)));
-          if (i !== lastIndex) applyIndex(i);
+        snap: {
+          snapTo: (value) => Math.round(value * 3) / 3, // thirds: 0, 0.333, 0.667, 1
+          duration: 0.45,
+          ease: 'power2.inOut',
         },
-        onLeave: () => {
-          // Keep overlay visible to mask the jump to next section
-          if (overlayRef.current) overlayRef.current.style.opacity = '1';
-          const next = document.getElementById('mri-showcase') || sectionRef.current?.nextElementSibling;
-          if (next) {
-            const top = next.getBoundingClientRect().top + window.scrollY;
-            window.scrollTo({ top, behavior: 'auto' });
-          }
-          // Fade overlay out to reveal the next (now in place)
-          if (overlayRef.current) gsap.to(overlayRef.current, { opacity: 0, duration: 0.6, ease: 'power1.out', delay: 0.05 });
+        onUpdate: (self) => {
+          const i = Math.min(2, Math.max(0, Math.floor(self.progress * 3 + 0.0001)));
+          if (i !== lastIndex) applyIndex(i);
         },
       });
 
@@ -112,7 +112,7 @@ const TaglineSequence = () => {
       ScrollTrigger.create({
         trigger: section,
         start: "top top",
-        end: "+=300%",
+        end: "+=240%",
         scrub: true,
         onUpdate: (self) => {
           const p = self.progress;
@@ -137,17 +137,8 @@ const TaglineSequence = () => {
             const o = 1 - fadeSeg;
             wrap.style.opacity = o.toFixed(3);
           }
-          // Also fade out taglines to avoid overlap during crossfade
-          const fadeSeg = Math.min(1, Math.max(0, (seg - 0.7) / 0.3));
-          const alpha = (1 - fadeSeg).toFixed(3);
-          if (t1Ref.current) t1Ref.current.style.opacity = alpha;
-          if (t2Ref.current) t2Ref.current.style.opacity = alpha;
-          if (t3Ref.current) t3Ref.current.style.opacity = alpha;
-          if (overlayRef.current) {
-            // Overlay fades in while wrap fades out to hide any movement
-            const fadeSeg = Math.min(1, Math.max(0, (seg - 0.7) / 0.3));
-            overlayRef.current.style.opacity = fadeSeg.toFixed(3);
-          }
+          // Ensure overlay never blocks subsequent sections
+          if (overlayRef.current) overlayRef.current.style.opacity = '0';
         },
       });
 
@@ -170,8 +161,8 @@ const TaglineSequence = () => {
   }, []);
 
   return (
-    <section id="taglines" ref={sectionRef} className="relative bg-white">
-      <div className="sticky top-0 min-h-screen flex items-center justify-center">
+    <section id="taglines" ref={sectionRef} className="relative overflow-hidden bg-white">
+      <div className="min-h-screen flex items-center justify-center">
         {/* 3D brain background (behind text) */}
         {!reduceMotion && (
           <div ref={canvasWrapRef} className="absolute inset-0 z-0 pointer-events-none">

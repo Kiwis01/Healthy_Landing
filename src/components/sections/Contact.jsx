@@ -4,10 +4,9 @@ import { Button } from "@/components/ui/button";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: ""
+    workEmail: "",
+    organization: "",
+    specialty: "",
   });
 
   const handleChange = (e) => {
@@ -20,13 +19,15 @@ const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Create mailto link with form data
-    const mailtoLink = `mailto:healthymx.contact@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`)}`;
+    const subject = `Request Early Access`;
+    const body = `Work Email: ${formData.workEmail}\nClinic/Organization: ${formData.organization}\nSpecialty: ${formData.specialty}`;
+    const mailtoLink = `mailto:healthymx.contact@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     
     // Open default email client
     window.location.href = mailtoLink;
     
     // Reset form
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    setFormData({ workEmail: "", organization: "", specialty: "" });
   };
 
   const contactInfo = [
@@ -42,84 +43,63 @@ const Contact = () => {
     <section className="py-20 bg-white" id="contact">
       <div className="container mx-auto px-4 md:px-6">
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <div className="inline-block px-3 py-1 rounded-full bg-healthy-primary/10 text-healthy-primary text-sm font-medium mb-4">
-            Get In Touch
-          </div>
-          <h2 className="heading-lg mb-4">Ready to Integrate AI into Your Practice?</h2>
+          <h2 className="heading-lg mb-4">See the Future of Clinical Practice.</h2>
           <p className="text-gray-600 text-lg">
-            Have questions about our AI services? Want to learn more about our pay-as-you-go model? 
-            We'd love to hear from you and help you get started.
+            We are currently onboarding innovative clinics and forward-thinking specialists. If you are ready to move beyond the limitations of legacy systems and pioneer the next generation of patient care, let's connect.
           </p>
         </div>
 
         <div className="max-w-2xl mx-auto">
           {/* Contact Form */}
           <div className="bg-gray-50 rounded-2xl p-8">
-            <h3 className="heading-md mb-6 text-center">Send us a Message</h3>
+            <h3 className="heading-md mb-6 text-center">Request Early Access</h3>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-healthy-primary focus:border-transparent"
-                    placeholder="John Doe"
-                    required
-                  />
-                </div>
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address
+                <div className="md:col-span-2">
+                  <label htmlFor="workEmail" className="block text-sm font-medium text-gray-700 mb-2">
+                    Work Email
                   </label>
                   <input
                     type="email"
-                    id="email"
-                    name="email"
-                    value={formData.email}
+                    id="workEmail"
+                    name="workEmail"
+                    value={formData.workEmail}
                     onChange={handleChange}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-healthy-primary focus:border-transparent"
-                    placeholder="john@example.com"
+                    placeholder="you@clinic.com"
                     required
                   />
                 </div>
-              </div>
-              
-              <div>
-                <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  id="subject"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-healthy-primary focus:border-transparent"
-                  placeholder="How can we help you?"
-                  required
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  rows="5"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-healthy-primary focus:border-transparent"
-                  placeholder="Tell us more about your AI integration needs..."
-                  required
-                ></textarea>
+                <div>
+                  <label htmlFor="organization" className="block text-sm font-medium text-gray-700 mb-2">
+                    Clinic/Organization Name
+                  </label>
+                  <input
+                    type="text"
+                    id="organization"
+                    name="organization"
+                    value={formData.organization}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-healthy-primary focus:border-transparent"
+                    placeholder="Healthy Clinic"
+                    required
+                  />
+                </div>
+                <div>
+                  <label htmlFor="specialty" className="block text-sm font-medium text-gray-700 mb-2">
+                    Specialty
+                  </label>
+                  <input
+                    type="text"
+                    id="specialty"
+                    name="specialty"
+                    value={formData.specialty}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-healthy-primary focus:border-transparent"
+                    placeholder="Radiology, Oncology, Cardiology, etc."
+                    required
+                  />
+                </div>
               </div>
               
               <Button 
@@ -127,7 +107,7 @@ const Contact = () => {
                 className="w-full bg-healthy-primary hover:bg-healthy-secondary text-white py-3"
               >
                 <Send className="h-4 w-4 mr-2" />
-                Send Message
+                Request Early Access
               </Button>
             </form>
           </div>

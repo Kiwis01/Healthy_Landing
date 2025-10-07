@@ -1,61 +1,110 @@
 import { useEffect, useRef } from "react";
 import { ArrowDown } from "lucide-react";
-import logoUrl from "@/components/resources/logo/logo.svg";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const Hero = () => {
   const sectionRef = useRef(null);
-  const logoRef = useRef(null);
+  const videoRef = useRef(null);
   const circle1Ref = useRef(null);
   const circle2Ref = useRef(null);
   const circle3Ref = useRef(null);
   const weAreRef = useRef(null);
   const groupRef = useRef(null);
+  const reduceMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   useEffect(() => {
     const section = sectionRef.current;
-    const logo = logoRef.current;
+    const video = videoRef.current;
     const c1 = circle1Ref.current;
     const c2 = circle2Ref.current;
     const c3 = circle3Ref.current;
     const group = groupRef.current;
-    if (!section || !logo) return;
+    if (!section) return;
 
     const ctx = gsap.context(() => {
       gsap.registerPlugin(ScrollTrigger);
 
       // Initial state
       gsap.set(group, { y: 0, scale: 1, transformOrigin: "50% 50%" });
-      gsap.set(logo, { scale: 1, y: 0, opacity: 1 });
       gsap.set(weAreRef.current, { autoAlpha: 1, y: 0 });
+      if (video) gsap.set(video, { autoAlpha: reduceMotion ? 1 : 0 });
+
       // Ensure header logo is hidden initially while hero is active
       document.documentElement.setAttribute('data-hero-active', '1');
 
-      // Timeline synced to the section scroll
+      // Prepare video for scrubbing
+      let duration = 0;
+      let setTime = null;
+      const onMeta = () => {
+        if (!video) return;
+        duration = video.duration || 0;
+        video.pause();
+        video.currentTime = 0;
+      };
+      if (!reduceMotion && video) {
+        if (video.readyState >= 1) onMeta();
+        else video.addEventListener('loadedmetadata', onMeta, { once: true });
+        // Smooth time updates to avoid jank
+        setTime = gsap.quickTo(video, 'currentTime', { duration: 0.12, ease: 'none', overwrite: true });
+      }
+
+      // Timeline synced to the section scroll and pinned for extended scrubbing
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "bottom top",
+          end: "+=220%",
           scrub: true,
+          pin: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
           onUpdate: (self) => {
+            const p = gsap.utils.clamp(0, 1, self.progress);
             // Keep navbar logo hidden almost until the hero finishes
-            const active = self.progress < 0.98 ? '1' : '0';
+            const active = p < 0.98 ? '1' : '0';
             document.documentElement.setAttribute('data-hero-active', active);
+
+            // Phases
+            const VIDEO_START = 0.20;      // when video begins
+            const FADE_IN_WIN = 0.12;      // fade-in window length
+            const MAX_SCRUB_NORM = 0.955;  // cap scrub a bit earlier to avoid tail frames
+
+            // Compute fades
+            const fadeIn = Math.min(1, Math.max(0, (p - VIDEO_START) / FADE_IN_WIN));
+            const videoAlpha = fadeIn; // keep visible until the very end
+
+            // Cross-fade text out as video fades in (only react to fade-in portion)
+            if (weAreRef.current) gsap.set(weAreRef.current, { autoAlpha: 1 - fadeIn });
+            // Scroll-scrub the intro video after VIDEO_START
+            if (video) {
+              if (!reduceMotion) {
+                const norm = Math.min(1, Math.max(0, (p - VIDEO_START) / (1 - VIDEO_START)));
+                const capped = Math.min(norm, MAX_SCRUB_NORM);
+                if (duration && setTime) setTime(capped * Math.max(0, duration - 0.05));
+                gsap.set(video, { autoAlpha: videoAlpha });
+              } else {
+                gsap.set(video, { autoAlpha: 1 });
+              }
+            }
+          },
+          onLeave: () => {
+            const next = document.getElementById('taglines') || sectionRef.current?.nextElementSibling;
+            if (next) {
+              const top = next.getBoundingClientRect().top + window.scrollY;
+              window.scrollTo({ top, behavior: 'auto' });
+            }
           },
         },
       });
 
       // Move the central group (text + logo) together so it "moves away" on scroll
       tl.to(group, { y: -140, scale: 0.9, ease: "none" }, 0)
-        // Background parallax
         .to(c1, { y: 60, ease: "none" }, 0)
         .to(c2, { y: 100, ease: "none" }, 0)
         .to(c3, { y: 140, ease: "none" }, 0);
 
-      // Fade out the 'we are' text near the end of the hero
-      tl.to(weAreRef.current, { autoAlpha: 0, ease: "none" }, 0.85);
+      // Note: text fade is handled in onUpdate together with the video fade
     }, section);
 
     return () => {
@@ -65,10 +114,23 @@ const Hero = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative h-[200vh] overflow-clip bg-white" id="hero">
-      {/* Sticky viewport for parallax stage */}
-      <div className="sticky top-0 h-screen">
+    <section ref={sectionRef} className="relative min-h-screen overflow-hidden bg-white" id="hero">
+      {/* Pinned viewport via GSAP ScrollTrigger (no nested sticky) */}
+      <div className="absolute inset-0">
         <div className="absolute inset-0 bg-hero-pattern opacity-40"></div>
+
+        {/* Fullscreen intro video that fades in and scrubs with scroll */}
+        <video
+          ref={videoRef}
+          src="/videos/intro.mp4"
+          className="absolute inset-0 w-full h-full object-cover z-0"
+          muted
+          playsInline
+          preload="auto"
+          controls={false}
+          autoPlay={reduceMotion}
+          loop={reduceMotion}
+        />
 
         {/* Parallax blobs */}
         <div ref={circle1Ref} className="absolute -top-20 right-10 w-72 h-72 bg-healthy-primary/10 rounded-full blur-3xl"></div>
@@ -83,14 +145,8 @@ const Hero = () => {
               className="font-medium text-gray-800 leading-tight"
               style={{ fontSize: "clamp(1.5rem, 3.2vw, 2.25rem)", transform: "scale(1.15)", marginBottom: "2px" }}
             >
-              Hello, we are
+              Hello, we are..
             </h2>
-            <img
-              ref={logoRef}
-              src={logoUrl}
-              alt="Healthy Logo"
-              className="w-[60vw] max-w-[540px] min-w-[220px] will-change-transform drop-shadow-xl"
-            />
           </div>
         </div>
 

@@ -29,7 +29,7 @@ const MRIShowcase = () => {
     const st = ScrollTrigger.create({
       trigger: el,
       start: "top top",
-      end: "+=420%",
+      end: "+=320%",
       pin: true,
       scrub: true,
       onUpdate: (self) => {
@@ -53,22 +53,21 @@ const MRIShowcase = () => {
   }, [reduceMotion]);
 
   return (
-    <section id="mri-showcase" ref={sectionRef} className="relative min-h-screen overflow-hidden bg-black">
+    <section id="mri-showcase" ref={sectionRef} className="relative min-h-screen md:min-h-[100dvh] overflow-hidden bg-white">
       {/* Fullscreen video */}
       <video
         ref={videoRef}
         src="/videos/cerebro-con-tumor.mp4"
-        className="absolute inset-0 w-full h-full object-cover"
+        className="absolute inset-0 w-full h-full object-contain object-center"
         muted
         playsInline
-        preload="metadata"
+        preload="auto"
         controls={false}
         autoPlay={reduceMotion}
         loop={reduceMotion}
       />
 
-      {/* Vignette for readability */}
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_0%,rgba(0,0,0,0.25)_55%,rgba(0,0,0,0.6)_100%)]" />
+      {/* Removed dark vignette to keep edges white on mobile */}
 
       {/* Glass text that fades in near the end */}
       <div
