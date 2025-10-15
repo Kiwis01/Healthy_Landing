@@ -17,7 +17,7 @@ const About = () => {
       video: {
         title: "AI Medical Diagnosis Platform",
         description: "Advanced AI-powered medical diagnosis with real-time analysis and reporting",
-        src: "/videos/healthy-ingles.mp4",
+        src: "/videos/optimizado/healthy-ingles.mp4",
         thumbnail: "https://via.placeholder.com/400x225/26bade/ffffff?text=Diagnosis+Platform"
       }
     },
@@ -28,7 +28,7 @@ const About = () => {
       video: {
         title: "VR & AR Medical Diagnosis",
         description: "3D reconstruction of the patient's body being used to diagnose the patient",
-        src: "/videos/enactus-presentation.mp4",
+        src: "/videos/optimizado/enactus-presentation.mp4",
         thumbnail: "https://via.placeholder.com/400x225/26bade/ffffff?text=VR+AR+Medical"
       }
     },
@@ -39,7 +39,7 @@ const About = () => {
       video: {
         title: "AI Medical Assistant Bot",
         description: "Intelligent medical assistant providing 24/7 support and guidance",
-        src: "/videos/healthy-bot-2.mp4",
+        src: "/videos/optimizado/healthy-bot-2.mp4",
         thumbnail: "https://via.placeholder.com/400x225/26bade/ffffff?text=AI+Medical+Bot"
       }
     },
@@ -50,8 +50,8 @@ const About = () => {
       video: {
         title: "Medical Data Analytics Platform",
         description: "Comprehensive data analysis and insights for healthcare optimization",
-        src: "/videos/data-analytics.png",
-        thumbnail: "/videos/data-analytics.png",
+        src: "/videos/optimizado/data-analytics.png",
+        thumbnail: "/videos/optimizado/data-analytics.png",
         isImage: true
       }
     },
@@ -62,7 +62,7 @@ const About = () => {
       video: {
         title: "AI-Powered Medical Insights",
         description: "Deep learning insights for predictive medicine and personalized care",
-        src: "/videos/ai-video-healthy.mp4",
+        src: "/videos/optimizado/ai-video-healthy.mp4",
         thumbnail: "https://via.placeholder.com/400x225/26bade/ffffff?text=AI+Insights"
       }
     }
@@ -196,6 +196,8 @@ const About = () => {
                       className="w-full h-96 object-contain rounded-lg brightness-110 bg-gray-900"
                       poster={activeTabData.video.thumbnail}
                       muted
+                      preload="metadata"
+                      playsInline
                       onPlay={() => setIsPlaying(true)}
                       onPause={() => setIsPlaying(false)}
                       onEnded={() => setIsPlaying(false)}
