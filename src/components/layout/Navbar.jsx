@@ -21,6 +21,7 @@ const Navbar = () => {
     { href: "#problem", label: "Problem" },
     { href: "#features", label: "Platform" },
     { href: "#vision", label: "Vision" },
+    { href: "#pricing", label: "Pricing" },
     { href: "#contact", label: "Contact" },
   ];
 

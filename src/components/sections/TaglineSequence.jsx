@@ -17,7 +17,7 @@ const TaglineSequence = () => {
 
   function BrainModel(props) {
     const group = useRef();
-    const { scene } = useGLTF('/models/brain_point_cloud/scene.gltf');
+    const { scene } = useGLTF('/models/brain_point_cloud/scene_draco.gltf');
     // Make materials semi-transparent
     useEffect(() => {
       if (!scene) return;
@@ -206,6 +206,6 @@ const TaglineSequence = () => {
 };
 
 // Preload brain model for faster reveal
-useGLTF.preload('/models/brain_point_cloud/scene.gltf');
+useGLTF.preload('/models/brain_point_cloud/scene_draco.gltf');
 
 export default TaglineSequence;

@@ -14,6 +14,7 @@ import Features from "@/components/sections/Features";
 import Problem from "@/components/sections/Problem";
 import Vision from "@/components/sections/Vision";
 import Contact from "@/components/sections/Contact";
+import Pricing from "@/components/sections/Pricing";  
 
 const Index = () => {
   // Global smooth scrolling with Lenis + coordinate with ScrollTrigger
@@ -120,6 +121,7 @@ const Index = () => {
         <Features />
         <Vision />
         <IntroPanel />
+        <Pricing />
         <Contact />
       </main>
       
