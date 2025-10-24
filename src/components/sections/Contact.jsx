@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, memo } from "react";
 import { Mail, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -133,4 +133,4 @@ const Contact = () => {
   );
 };
 
-export default Contact; 
+export default memo(Contact); 

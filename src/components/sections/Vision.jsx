@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -107,4 +107,4 @@ const Vision = () => {
   );
 };
 
-export default Vision;
+export default memo(Vision);

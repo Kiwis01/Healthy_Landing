@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -208,4 +208,4 @@ const TaglineSequence = () => {
 // Preload brain model for faster reveal
 useGLTF.preload('/models/brain_point_cloud/scene_draco.gltf');
 
-export default TaglineSequence;
+export default memo(TaglineSequence);

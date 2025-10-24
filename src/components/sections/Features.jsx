@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Brain, Scan, FileText, LayoutGrid } from "lucide-react";
@@ -128,4 +128,4 @@ const Features = () => {
   );
 };
 
-export default Features; 
+export default memo(Features); 

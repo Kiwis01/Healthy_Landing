@@ -2,17 +2,18 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import logoUrl from "@/components/resources/logo/logo.svg";
+import { throttle } from "@/lib/utils";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = throttle(() => {
       setIsScrolled(window.scrollY > 10);
-    };
+    }, 100); // Throttle to 100ms
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -35,14 +36,12 @@ const Navbar = () => {
     >
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
           <div className="flex items-center">
             <a href="#hero">
               <img src={logoUrl} alt="Healthy Logo" className="navbar-logo h-14 w-auto" />
             </a>
           </div>
 
-          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <a
@@ -55,7 +54,6 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* CTA Button */}
           <div className="hidden md:block">
             <a href="#contact">
               <Button className="bg-healthy-primary hover:bg-healthy-secondary text-white">
@@ -64,7 +62,6 @@ const Navbar = () => {
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
           <div className="md:hidden">
             <Button
               variant="ghost"
@@ -77,7 +74,6 @@ const Navbar = () => {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden bg-white border-t border-gray-200">
             <div className="px-4 py-6 space-y-4">
@@ -106,4 +102,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;

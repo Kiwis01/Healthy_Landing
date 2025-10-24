@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { AlertTriangle, FileText, Layers, Activity } from "lucide-react";
@@ -143,4 +143,4 @@ const Problem = () => {
   );
 };
 
-export default Problem;
+export default memo(Problem);

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -35,11 +35,17 @@ const MRIShowcase = () => {
       onUpdate: (self) => {
         if (!duration) return;
         const p = gsap.utils.clamp(0, 1, self.progress);
-        // Scrub in the first ~60% of scroll, then hold longer at the end
         const SCRUB_FRACTION = 0.60;
         const scrubbed = Math.min(1, p / SCRUB_FRACTION);
-        video.currentTime = scrubbed * Math.max(0, duration - 0.05);
-        // Fade in glass text earlier and keep it visible longer
+        
+        // Use RAF to batch video updates
+        requestAnimationFrame(() => {
+          const targetTime = scrubbed * Math.max(0, duration - 0.05);
+          if (Math.abs(video.currentTime - targetTime) > 0.033) { // Only update if > 2 frames different
+            video.currentTime = targetTime;
+          }
+        });
+        
         const TEXT_FADE_START = 0.70;
         const TEXT_FADE_END = 0.85;
         const t = Math.min(1, Math.max(0, (p - TEXT_FADE_START) / (TEXT_FADE_END - TEXT_FADE_START)));
@@ -86,4 +92,4 @@ const MRIShowcase = () => {
   );
 };
 
-export default MRIShowcase;
+export default memo(MRIShowcase);

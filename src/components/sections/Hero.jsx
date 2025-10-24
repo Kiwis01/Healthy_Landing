@@ -35,7 +35,13 @@ const Hero = () => {
 
       // Prepare video for scrubbing
       let duration = 0;
-      let setTime = null;
+      let lastTime = 0;
+      const setTime = (time) => {
+        if (video && Math.abs(time - lastTime) > 0.016) { // Only update if change > 1 frame at 60fps
+          video.currentTime = time;
+          lastTime = time;
+        }
+      };
       const onMeta = () => {
         if (!video) return;
         duration = video.duration || 0;
@@ -45,8 +51,6 @@ const Hero = () => {
       if (!reduceMotion && video) {
         if (video.readyState >= 1) onMeta();
         else video.addEventListener('loadedmetadata', onMeta, { once: true });
-        // Smooth time updates to avoid jank
-        setTime = gsap.quickTo(video, 'currentTime', { duration: 0.12, ease: 'none', overwrite: true });
       }
 
       // Timeline synced to the section scroll and pinned for extended scrubbing
@@ -77,15 +81,16 @@ const Hero = () => {
             // Cross-fade text out as video fades in (only react to fade-in portion)
             if (weAreRef.current) gsap.set(weAreRef.current, { autoAlpha: 1 - fadeIn });
             // Scroll-scrub the intro video after VIDEO_START
-            if (video) {
-              if (!reduceMotion) {
-                const norm = Math.min(1, Math.max(0, (p - VIDEO_START) / (1 - VIDEO_START)));
-                const capped = Math.min(norm, MAX_SCRUB_NORM);
-                if (duration && setTime) setTime(capped * Math.max(0, duration - 0.05));
-                gsap.set(video, { autoAlpha: videoAlpha });
-              } else {
-                gsap.set(video, { autoAlpha: 1 });
+            if (video && !reduceMotion) {
+              const norm = Math.min(1, Math.max(0, (p - VIDEO_START) / (1 - VIDEO_START)));
+              const capped = Math.min(norm, MAX_SCRUB_NORM);
+              if (duration) {
+                const targetTime = capped * Math.max(0, duration - 0.05);
+                setTime(targetTime);
               }
+              gsap.set(video, { autoAlpha: videoAlpha });
+            } else if (video) {
+              gsap.set(video, { autoAlpha: 1 });
             }
           },
           onLeave: () => {

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { ArrowRight } from "lucide-react";
 
 const IntroPanel = () => {
@@ -27,4 +28,4 @@ const IntroPanel = () => {
   );
 };
 
-export default IntroPanel;
+export default memo(IntroPanel);

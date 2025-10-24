@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Heart, Mail } from "lucide-react";
 
 const Footer = () => {
@@ -93,4 +94,4 @@ const Footer = () => {
   );
 };
 
-export default Footer; 
+export default memo(Footer); 

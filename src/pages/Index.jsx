@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "@studio-freight/lenis";
@@ -6,15 +6,17 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import BackgroundFX from "@/components/layout/BackgroundFX";
 import BackgroundOrgans from "@/components/layout/BackgroundOrgans";
-import Hero from "@/components/sections/Hero";
-import TaglineSequence from "@/components/sections/TaglineSequence";
-import IntroPanel from "@/components/sections/IntroPanel";
-import MRIShowcase from "@/components/sections/MRIShowcase";
-import Features from "@/components/sections/Features";
-import Problem from "@/components/sections/Problem";
-import Vision from "@/components/sections/Vision";
-import Contact from "@/components/sections/Contact";
-import Pricing from "@/components/sections/Pricing";  
+import Hero from "@/components/sections/Hero"; 
+
+// Lazy load non-critical sections
+const TaglineSequence = lazy(() => import("@/components/sections/TaglineSequence"));
+const IntroPanel = lazy(() => import("@/components/sections/IntroPanel"));
+const MRIShowcase = lazy(() => import("@/components/sections/MRIShowcase"));
+const Features = lazy(() => import("@/components/sections/Features"));
+const Problem = lazy(() => import("@/components/sections/Problem"));
+const Vision = lazy(() => import("@/components/sections/Vision"));
+const Contact = lazy(() => import("@/components/sections/Contact"));
+const Pricing = lazy(() => import("@/components/sections/Pricing"));
 
 const Index = () => {
   // Global smooth scrolling with Lenis + coordinate with ScrollTrigger
@@ -115,14 +117,16 @@ const Index = () => {
       
       <main className="flex-grow">
         <Hero />
-        <TaglineSequence />
-        <MRIShowcase />
-        <Problem />
-        <Features />
-        <Vision />
-        <IntroPanel />
-        <Pricing />
-        <Contact />
+        <Suspense fallback={<div className="min-h-screen" />}>
+          <TaglineSequence />
+          <MRIShowcase />
+          <Problem />
+          <Features />
+          <Vision />
+          <IntroPanel />
+          <Pricing />
+          <Contact />
+        </Suspense>
       </main>
       
       <Footer />
