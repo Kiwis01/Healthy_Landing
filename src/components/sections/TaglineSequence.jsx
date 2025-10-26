@@ -94,7 +94,7 @@ const TaglineSequence = () => {
       const st = ScrollTrigger.create({
         trigger: section,
         start: "top top",
-        end: "+=240%",
+        end: "+=170%",
         scrub: true,
         pin: true,
         snap: {
@@ -112,7 +112,7 @@ const TaglineSequence = () => {
       ScrollTrigger.create({
         trigger: section,
         start: "top top",
-        end: "+=240%",
+        end: "+=170%",
         scrub: true,
         onUpdate: (self) => {
           const p = self.progress;

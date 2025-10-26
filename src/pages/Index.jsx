@@ -17,6 +17,7 @@ const Problem = lazy(() => import("@/components/sections/Problem"));
 const Vision = lazy(() => import("@/components/sections/Vision"));
 const Contact = lazy(() => import("@/components/sections/Contact"));
 const Pricing = lazy(() => import("@/components/sections/Pricing"));
+const About = lazy(() => import("@/components/sections/About"));
 
 const Index = () => {
   // Global smooth scrolling with Lenis + coordinate with ScrollTrigger
@@ -124,6 +125,7 @@ const Index = () => {
           <Features />
           <Vision />
           <IntroPanel />
+          <About />
           <Pricing />
           <Contact />
         </Suspense>
