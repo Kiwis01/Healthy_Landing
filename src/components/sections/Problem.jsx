@@ -13,27 +13,23 @@ const Problem = () => {
   const painPoints = [
     {
       Icon: Layers,
-      title: "Fragmented Data & Tooling",
-      description:
-        "Clinicians are forced to navigate a disconnected maze of EMRs, PACS, and lab portals, creating friction and wasting valuable time.",
+      title: "Fragmented Systems",
+      description: "Disconnected EMRs, PACS, and portals waste valuable time.",
     },
     {
       Icon: FileText,
-      title: "Unstructured Data Overload",
-      description:
-        "Critical insights remain locked in unstructured PDFs and image-based reports, demanding manual review and transcription.",
+      title: "Data Overload",
+      description: "Critical insights locked in unstructured reports.",
     },
     {
       Icon: Activity,
-      title: "Latent Clinical Risk",
-      description:
-        "Patient safety is compromised by the inability to proactively detect drug-allergy conflicts or adverse interaction signals buried in dense clinical histories.",
+      title: "Hidden Risks",
+      description: "Drug conflicts buried in dense clinical histories.",
     },
     {
       Icon: AlertTriangle,
-      title: "Manual, Subjective Diagnostics",
-      description:
-        "Radiological analysis relies on manual measurements and subjective interpretation, limiting speed, consistency, and accuracy.",
+      title: "Manual Analysis",
+      description: "Subjective interpretation limits accuracy.",
     },
   ];
 
@@ -107,33 +103,36 @@ const Problem = () => {
       </div>
 
       <div className="container mx-auto px-4 md:px-6">
-        <div ref={headerRef} className="text-center max-w-4xl mx-auto mb-14">
-          <div className="inline-block px-3 py-1 rounded-full bg-red-500/10 text-red-600 text-sm font-medium mb-4">
-            Healthcare's Broken Stack
+        <div ref={headerRef} className="text-center max-w-3xl mx-auto mb-16">
+          <div className="inline-block px-4 py-2 rounded-full bg-red-500/10 text-red-600 text-sm font-semibold mb-6">
+            The Challenge
           </div>
-          <h2 className="heading-lg mb-4">Healthcare's Broken Stack is Failing Clinicians.</h2>
-          <p className="text-gray-600 text-lg">
-            Systemic fragmentation and unstructured information slow down decisions and increase patient risk.
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
+            Healthcare's Broken Stack
+          </h2>
+          <p className="text-gray-600 text-lg md:text-xl">
+            Fragmented systems slow decisions and increase risk.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
           {painPoints.map(({ Icon, title, description }, idx) => (
             <div
               key={idx}
               ref={(el) => (cardsRef.current[idx] = el)}
               onMouseMove={(e) => handleMove(e, idx)}
               onMouseLeave={() => handleLeave(idx)}
-              className="group rounded-xl border border-gray-200 bg-white p-6 shadow-sm transition-[transform,box-shadow] duration-300 hover:shadow-lg will-change-transform"
+              className="group relative rounded-2xl bg-white p-6 shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 will-change-transform"
             >
-              <div className="flex items-start gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-healthy-primary/10 text-healthy-primary group-hover:scale-105 transition-transform">
-                  <Icon className="h-6 w-6" />
+              {/* Gradient overlay on hover */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              <div className="relative">
+                <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-red-500/10 text-red-600 mb-4 group-hover:scale-110 group-hover:bg-red-500/20 transition-all duration-300">
+                  <Icon className="h-7 w-7" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">{title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{description}</p>
-                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">{title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{description}</p>
               </div>
             </div>
           ))}

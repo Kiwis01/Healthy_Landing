@@ -40,24 +40,28 @@ const Contact = () => {
   ];
 
   return (
-    <section className="py-20 bg-white" id="contact">
+    <section className="py-24 bg-gradient-to-b from-white to-gray-50" id="contact">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="heading-lg mb-4">See the Future of Clinical Practice.</h2>
-          <p className="text-gray-600 text-lg">
-            We are currently onboarding innovative clinics and forward-thinking specialists. If you are ready to move beyond the limitations of legacy systems and pioneer the next generation of patient care, let's connect.
+        <div className="text-center max-w-3xl mx-auto mb-12">
+          <div className="inline-block px-4 py-2 rounded-full bg-healthy-primary/10 text-healthy-primary text-sm font-semibold mb-6">
+            Get Started
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
+            Ready to Transform Your Practice?
+          </h2>
+          <p className="text-gray-600 text-lg md:text-xl">
+            Join innovative clinics pioneering the next generation of patient care.
           </p>
         </div>
 
         <div className="max-w-2xl mx-auto">
           {/* Contact Form */}
-          <div className="bg-gray-50 rounded-2xl p-8">
-            <h3 className="heading-md mb-6 text-center">Request Early Access</h3>
+          <div className="bg-white rounded-3xl p-8 md:p-10 shadow-xl border border-gray-100">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="md:col-span-2">
-                  <label htmlFor="workEmail" className="block text-sm font-medium text-gray-700 mb-2">
-                    Work Email
+                  <label htmlFor="workEmail" className="block text-sm font-semibold text-gray-900 mb-2">
+                    Work Email *
                   </label>
                   <input
                     type="email"
@@ -65,14 +69,14 @@ const Contact = () => {
                     name="workEmail"
                     value={formData.workEmail}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-healthy-primary focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-healthy-primary focus:border-transparent transition-all bg-gray-50 focus:bg-white"
                     placeholder="you@clinic.com"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="organization" className="block text-sm font-medium text-gray-700 mb-2">
-                    Clinic/Organization Name
+                  <label htmlFor="organization" className="block text-sm font-semibold text-gray-900 mb-2">
+                    Organization *
                   </label>
                   <input
                     type="text"
@@ -80,14 +84,14 @@ const Contact = () => {
                     name="organization"
                     value={formData.organization}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-healthy-primary focus:border-transparent"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-healthy-primary focus:border-transparent transition-all bg-gray-50 focus:bg-white"
                     placeholder="Healthy Clinic"
                     required
                   />
                 </div>
                 <div>
-                  <label htmlFor="specialty" className="block text-sm font-medium text-gray-700 mb-2">
-                    Specialty
+                  <label htmlFor="specialty" className="block text-sm font-semibold text-gray-900 mb-2">
+                    Specialty *
                   </label>
                   <input
                     type="text"
@@ -95,8 +99,8 @@ const Contact = () => {
                     name="specialty"
                     value={formData.specialty}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-healthy-primary focus:border-transparent"
-                    placeholder="Radiology, Oncology, Cardiology, etc."
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-healthy-primary focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                    placeholder="Radiology, Oncology, etc."
                     required
                   />
                 </div>
@@ -104,26 +108,21 @@ const Contact = () => {
               
               <Button 
                 type="submit" 
-                className="w-full bg-healthy-primary hover:bg-healthy-secondary text-white py-3"
+                className="w-full bg-healthy-primary hover:bg-healthy-secondary text-white py-4 text-lg font-semibold rounded-xl transition-all duration-300 hover:scale-[1.02] shadow-lg hover:shadow-xl"
               >
-                <Send className="h-4 w-4 mr-2" />
+                <Send className="h-5 w-5 mr-2" />
                 Request Early Access
               </Button>
             </form>
           </div>
 
           {/* Contact Information */}
-          <div className="text-center mt-8">
-            <div className="flex items-center justify-center space-x-4">
-              <div className="flex items-center justify-center w-12 h-12 bg-healthy-primary/10 rounded-lg">
-                <div className="text-healthy-primary">
-                  <Mail className="h-6 w-6" />
-                </div>
-              </div>
+          <div className="text-center mt-10">
+            <div className="inline-flex items-center gap-3 px-6 py-3 bg-gray-50 rounded-full">
+              <Mail className="h-5 w-5 text-healthy-primary" />
               <div className="text-left">
-                <h4 className="font-semibold text-gray-900">Email</h4>
-                <p className="text-gray-600">healthymx.contact@gmail.com</p>
-                <p className="text-gray-500 text-sm">We'll respond within 24 hours</p>
+                <p className="text-sm font-medium text-gray-900">healthymx.contact@gmail.com</p>
+                <p className="text-xs text-gray-500">Response within 24 hours</p>
               </div>
             </div>
           </div>

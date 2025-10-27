@@ -15,6 +15,7 @@ const MRIShowcase = lazy(() => import("@/components/sections/MRIShowcase"));
 const Features = lazy(() => import("@/components/sections/Features"));
 const Problem = lazy(() => import("@/components/sections/Problem"));
 const Vision = lazy(() => import("@/components/sections/Vision"));
+const LogoCloud = lazy(() => import("@/components/sections/LogoCloud"));
 const Contact = lazy(() => import("@/components/sections/Contact"));
 const Pricing = lazy(() => import("@/components/sections/Pricing"));
 const About = lazy(() => import("@/components/sections/About"));
@@ -124,9 +125,11 @@ const Index = () => {
           <Problem />
           <Features />
           <Vision />
-          <IntroPanel />
-          <About />
+          <LogoCloud />
           <Pricing />
+          {/* Commented out for a more focused, minimalistic experience */}
+          {/* <IntroPanel /> */}
+          {/* <About /> */}
           <Contact />
         </Suspense>
       </main>
