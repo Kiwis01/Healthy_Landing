@@ -4,74 +4,105 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const MRIShowcase = () => {
   const sectionRef = useRef(null);
-  const videoRef = useRef(null);
   const textRef = useRef(null);
   const reduceMotion = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   useEffect(() => {
-    if (reduceMotion) return; // Fallback to default playback via attributes
     gsap.registerPlugin(ScrollTrigger);
-
     const el = sectionRef.current;
-    const video = videoRef.current;
-    if (!el || !video) return;
+    const textEl = textRef.current;
+    if (!el || !textEl) return;
 
-    // Ensure video is ready for scrubbing
-    let duration = 0;
-    const onMeta = () => {
-      duration = video.duration || 0;
-      video.pause();
-      video.currentTime = 0;
-    };
-    if (video.readyState >= 1) onMeta();
-    else video.addEventListener('loadedmetadata', onMeta, { once: true });
+    if (reduceMotion) {
+      textEl.style.opacity = '1';
+      return;
+    }
 
-    const st = ScrollTrigger.create({
-      trigger: el,
-      start: "top top",
-      end: "+=320%",
-      pin: true,
-      scrub: true,
-      onUpdate: (self) => {
-        if (!duration) return;
-        const p = gsap.utils.clamp(0, 1, self.progress);
-        const SCRUB_FRACTION = 0.60;
-        const scrubbed = Math.min(1, p / SCRUB_FRACTION);
-        
-        // Use RAF to batch video updates
-        requestAnimationFrame(() => {
-          const targetTime = scrubbed * Math.max(0, duration - 0.05);
-          if (Math.abs(video.currentTime - targetTime) > 0.033) { // Only update if > 2 frames different
-            video.currentTime = targetTime;
-          }
-        });
-        
-        const TEXT_FADE_START = 0.70;
-        const TEXT_FADE_END = 0.85;
-        const t = Math.min(1, Math.max(0, (p - TEXT_FADE_START) / (TEXT_FADE_END - TEXT_FADE_START)));
-        if (textRef.current) textRef.current.style.opacity = t.toFixed(3);
-      },
-    });
+    const tween = gsap.fromTo(
+      textEl,
+      { opacity: 0 },
+      {
+        opacity: 1,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 25%',
+          end: 'top 70%',
+          scrub: true,
+        },
+      }
+    );
 
     return () => {
-      st.kill();
+      if (tween) tween.kill();
+      ScrollTrigger.getAll().forEach((st) => {
+        if (st.trigger === el) st.kill();
+      });
     };
   }, [reduceMotion]);
 
   return (
-    <section id="mri-showcase" ref={sectionRef} className="relative min-h-screen md:min-h-[100dvh] overflow-hidden bg-white">
-      {/* Fullscreen video */}
-      <video
-        ref={videoRef}
-        src="/videos/cerebro-con-tumor.mp4"
-        className="absolute inset-0 w-full h-full object-contain object-center"
-        muted
-        playsInline
-        preload="auto"
-        controls={false}
-        autoPlay={reduceMotion}
-        loop={reduceMotion}
-      />
+    <section id="mri-showcase" ref={sectionRef} className="relative min-h-screen md:min-h-[80dvh] overflow-hidden bg-white">
+      <div className="absolute inset-0 flex items-center justify-center p-4 md:p-8">
+        <div className="grid grid-cols-2 grid-rows-2 gap-3 md:gap-20 max-w-[1310px] h-[60vh] md:h-[70vh]">
+        <video
+          src="/videos/cerebro-con-tumor.mp4"
+          className="w-full h-full object-contain bg-black/5 rounded-lg ring-1 ring-black/10 shadow"
+          muted
+          playsInline
+          preload="metadata"
+          controls={false}
+          loop
+          onMouseEnter={(e) => e.currentTarget.play()}
+          onMouseLeave={(e) => {
+            e.currentTarget.pause();
+            e.currentTarget.currentTime = 0;
+          }}
+        />
+        <video
+          src="/videos/cerebro-con-tumor.mp4"
+          className="w-full h-full object-contain bg-black/5 rounded-lg ring-1 ring-black/10 shadow"
+          muted
+          playsInline
+          preload="metadata"
+          controls={false}
+          loop
+          onMouseEnter={(e) => e.currentTarget.play()}
+          onMouseLeave={(e) => {
+            e.currentTarget.pause();
+            e.currentTarget.currentTime = 0;
+          }}
+        />
+        <video
+          src="/videos/cerebro-con-tumor.mp4"
+          className="w-full h-full object-contain bg-black/5 rounded-lg ring-1 ring-black/10 shadow"
+          muted
+          playsInline
+          preload="metadata"
+          controls={false}
+          loop
+          onMouseEnter={(e) => e.currentTarget.play()}
+          onMouseLeave={(e) => {
+            e.currentTarget.pause();
+            e.currentTarget.currentTime = 0;
+          }}
+        />
+        <video
+          src="/videos/cerebro-con-tumor.mp4"
+          className="w-full h-full object-contain bg-black/5 rounded-lg ring-1 ring-black/10 shadow"
+          muted
+          playsInline
+          preload="metadata"
+          controls={false}
+          loop
+          onMouseEnter={(e) => e.currentTarget.play()}
+          onMouseLeave={(e) => {
+            e.currentTarget.pause();
+            e.currentTarget.currentTime = 0;
+          }}
+        />
+        </div>
+      </div>
 
       {/* Removed dark vignette to keep edges white on mobile */}
 
