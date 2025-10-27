@@ -47,7 +47,7 @@ const Contact = () => {
             Get Started
           </div>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">
-            Ready to Transform Your Practice?
+            Contact Us
           </h2>
           <p className="text-gray-600 text-lg md:text-xl">
             Join innovative clinics pioneering the next generation of patient care.

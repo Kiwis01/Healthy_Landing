@@ -9,12 +9,17 @@ const LogoCloud = () => {
 
   // Replace these with your actual partner/validation logos
   const partners = [
-    { name: "Partner 1", logo: "/images/MIT_logo.svg" },
+    { name: "Partner 1", logo: "/images/aws_logo.png" },
     { name: "Partner 2", logo: "/images/enactus_logo.png" },
     { name: "Partner 3", logo: "/images/ford_logo.png" },
     { name: "Partner 4", logo: "/images/unesco_logo.png" },
-    { name: "Partner 5", logo: "/images/logo5.png" },
-    { name: "Partner 6", logo: "/images/logo6.png" },
+    { name: "Partner 5", logo: "/images/paris_logo.png" },
+    { name: "Partner 6", logo: "/images/kpmg_logo.svg" },
+    { name: "Partner 7", logo: "/images/tec_logo.png" },
+    { name: "Partner 8", logo: "/images/uw_logo.png" },
+    { name: "Partner 9", logo: "/images/asu_logo.png" },
+    { name: "Partner 10", logo: "/images/harvard_logo.png" },
+    { name: "Partner 11", logo: "/images/MIT_logo.svg" },
   ];
 
   useEffect(() => {
