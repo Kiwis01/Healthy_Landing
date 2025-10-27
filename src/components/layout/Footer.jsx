@@ -1,5 +1,6 @@
 import { memo } from "react";
-import { Heart, Mail } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Mail } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -49,24 +50,19 @@ const Footer = () => {
             <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li>
-                <a href="#features" className="text-gray-300 hover:text-healthy-primary transition-colors">
-                  Features
-                </a>
+                <Link to="/" className="text-gray-300 hover:text-healthy-primary transition-colors">
+                  Home
+                </Link>
               </li>
               <li>
-                <a href="#about" className="text-gray-300 hover:text-healthy-primary transition-colors">
-                  About Us
-                </a>
+                <Link to="/pricing" className="text-gray-300 hover:text-healthy-primary transition-colors">
+                  Pricing
+                </Link>
               </li>
               <li>
-                <a href="#services" className="text-gray-300 hover:text-healthy-primary transition-colors">
-                  Services
-                </a>
-              </li>
-              <li>
-                <a href="#contact" className="text-gray-300 hover:text-healthy-primary transition-colors">
+                <Link to="/contact" className="text-gray-300 hover:text-healthy-primary transition-colors">
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

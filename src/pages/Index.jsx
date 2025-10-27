@@ -16,8 +16,7 @@ const Features = lazy(() => import("@/components/sections/Features"));
 const Problem = lazy(() => import("@/components/sections/Problem"));
 const Vision = lazy(() => import("@/components/sections/Vision"));
 const LogoCloud = lazy(() => import("@/components/sections/LogoCloud"));
-const Contact = lazy(() => import("@/components/sections/Contact"));
-const Pricing = lazy(() => import("@/components/sections/Pricing"));
+const CTASection = lazy(() => import("@/components/sections/CTASection"));
 const About = lazy(() => import("@/components/sections/About"));
 
 const Index = () => {
@@ -53,26 +52,37 @@ const Index = () => {
       if (!anchor) return;
 
       const href = anchor.getAttribute('href');
-      if (!href || href === '#') return;
+      if (!href || href === '#' || href === '#/') return;
 
-      const el = document.querySelector(href);
-      if (!el) return;
+      // Only handle valid section anchors (not router hashes)
+      try {
+        const el = document.querySelector(href);
+        if (!el) return;
 
-      e.preventDefault();
-      lenis.scrollTo(el, {
-        offset: 0,
-      });
+        e.preventDefault();
+        lenis.scrollTo(el, {
+          offset: 0,
+        });
+      } catch (error) {
+        // Invalid selector, ignore
+        return;
+      }
     };
 
     document.addEventListener('click', handleAnchorClick);
 
     // Handle deep-link on initial load
-    if (window.location.hash) {
-      const el = document.querySelector(window.location.hash);
-      if (el) {
-        setTimeout(() => {
-          lenis.scrollTo(el, { offset: 0 });
-        }, 100);
+    const hash = window.location.hash;
+    if (hash && hash !== '#/' && hash.length > 2) {
+      try {
+        const el = document.querySelector(hash);
+        if (el) {
+          setTimeout(() => {
+            lenis.scrollTo(el, { offset: 0 });
+          }, 100);
+        }
+      } catch (error) {
+        // Invalid selector, ignore
       }
     }
 
@@ -126,11 +136,11 @@ const Index = () => {
           <Features />
           <Vision />
           <LogoCloud />
-          <Pricing />
+          <CTASection />
           {/* Commented out for a more focused, minimalistic experience */}
           {/* <IntroPanel /> */}
           {/* <About /> */}
-          <Contact />
+          {/* Pricing and Contact are now on separate pages */}
         </Suspense>
       </main>
       
